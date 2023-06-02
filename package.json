@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "tsc": "tsc",
+    "tsx:dev": "pnpx tsx server/fastify.ts",
+    "tsx:watch": "pnpx tsx watch server/fastify.ts"
+  },
+  "dependencies": {
+    "fastify": "latest",
+    "@fastify/static": "latest"
+  },
+  "devDependencies": {
+    "vue": "^3.3.4",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "remult": "^0.22.9",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.11",
+    "vue-tsc": "^1.8.18",
+    "vite-plugin-fastify": "latest"
+  },
+  "optionalDependencies": {
+
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
