@@ -1,4 +1,4 @@
-import type { Plugin, Connect } from 'vite'
+import type { Plugin } from 'vite'
 import fastifyApp from "./fastifyApp";
 
 interface pluginOption {
