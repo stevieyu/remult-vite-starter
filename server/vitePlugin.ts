@@ -16,7 +16,22 @@ export default function (userOptions: Partial<pluginOption> = {}) {
         res: http.ServerResponse,
         next: Function
     ) => {
-        if (!/^\/api/i.test(req.url) || !api) return next()
+        if (!/^\/api/i.test(req.url)) return next()
+
+        if(!api) {
+            api = createRemultServer(options, {
+                buildGenericRequestInfo: (r) => r,
+                getRequestBody: (req) => new Promise(resolve => {
+                    let data = ''
+                    req.on('data', chunk => {
+                        data += chunk;
+                    });
+                    req.on('end', () => {
+                        resolve(JSON.parse(data));
+                    });
+                }),
+            })
+        }
 
         if (/openApi.json$/.test(req.url)) {
             res.writeHead(200, {'Content-Type': 'application/json'});
@@ -40,22 +55,6 @@ export default function (userOptions: Partial<pluginOption> = {}) {
 
     return <Plugin>{
         name: 'server',
-        async config(config, env) {
-            if (env.command === 'serve') {
-                api = createRemultServer(options, {
-                    buildGenericRequestInfo: (r) => r,
-                    getRequestBody: (req) => new Promise(resolve => {
-                        let data = ''
-                        req.on('data', chunk => {
-                            data += chunk;
-                        });
-                        req.on('end', () => {
-                            resolve(JSON.parse(data));
-                        });
-                    }),
-                })
-            }
-        },
         configureServer(server) {
             server.middlewares.use(middleware)
         },
