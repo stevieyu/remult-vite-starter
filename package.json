@@ -7,11 +7,10 @@
     "preview": "vite preview",
     "tsc": "tsc",
     "tsx:dev": "pnpx tsx server/fastify.ts",
-    "tsx:watch": "pnpx tsx watch server/fastify.ts"
+    "tsx:watch": "pnpx tsx watch server/nhttpLand.ts"
   },
   "dependencies": {
-    "@fastify/static": "latest",
-    "fastify": "latest"
+    "nhttp-land": "latest"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",

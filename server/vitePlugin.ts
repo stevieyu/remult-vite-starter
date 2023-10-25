@@ -1,28 +1,65 @@
-import type { Plugin } from 'vite'
-import fastifyApp from "./fastifyApp";
+import type {Plugin} from 'vite'
+import {createRemultServer} from "remult/server";
+import options, {openApiDocOpts} from "./remultOptions";
+import http from "http";
+import {readFileSync} from "fs";
+
 
 interface pluginOption {
 }
 
 export default function (userOptions: Partial<pluginOption> = {}) {
-    let app = null;
+    let api = null;
 
-    const middleware = async (req, res, next) => {
-        if(!/^\/api/i.test(req.url) || !app) return next()
-        app.routing(req, res)
+    const middleware = async (
+        req: http.IncomingMessage,
+        res: http.ServerResponse,
+        next: Function
+    ) => {
+        if (!/^\/api/i.test(req.url) || !api) return next()
+
+        if (/openApi.json$/.test(req.url)) {
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify(api.openApiDoc(openApiDocOpts)))
+        }
+
+        if (/docs$/.test(req.url)) {
+            res.writeHead(200, {'Content-Type': 'text/html; charset=UTF-8'});
+            return res.end(readFileSync('server/swagger.html').toString())
+        }
+
+        Object.assign(res, {
+            json: (data) => {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(data))
+            },
+        });
+        const ret = await api.handle(req, res)
+        if (!ret) next()
     }
 
     return <Plugin>{
         name: 'server',
-        async config(config, env){
-            if(env.command === 'serve'){
-                app = await fastifyApp()
+        async config(config, env) {
+            if (env.command === 'serve') {
+                api = createRemultServer(options, {
+                    buildGenericRequestInfo: (r) => r,
+                    getRequestBody: (req) => new Promise(resolve => {
+                        let data = ''
+                        req.on('data', chunk => {
+                            data += chunk;
+                        });
+                        req.on('end', () => {
+                            resolve(JSON.parse(data));
+                        });
+                    }),
+                })
             }
         },
         configureServer(server) {
             server.middlewares.use(middleware)
         },
-        configurePreviewServer(server){
+        configurePreviewServer(server) {
             server.middlewares.use(middleware)
         }
     }
