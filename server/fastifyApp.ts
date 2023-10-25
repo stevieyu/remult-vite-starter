@@ -11,8 +11,8 @@ export default async (plugins = []) => {
         ...plugins.map((plugin) => {
             let opts = {}
             if(Array.isArray(plugin)) {
-                plugin = plugin[0]
                 opts = plugin[1] || {}
+                plugin = plugin[0]
             }
             return app.register(plugin, opts)
         }),

@@ -7,7 +7,10 @@ const api = remultFastify(options)
 
 export default async function (fastify: FastifyInstance, opts: FastifyPluginOptions, done: DoneFuncWithErrOrRes){
     fastify.get("/api/openApi.json", (req, res) =>
-        api.openApiDoc({ title: "remult-react-todo" })
+        api.openApiDoc({
+            title: "remult-vite-demo",
+            version: '0.0.1',
+        })
     );
     fastify.get("/api/docs", (req, res) => {
         res.header("Content-Type", "text/html; charset=UTF-8")
