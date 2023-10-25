@@ -1,5 +1,6 @@
 import type {Plugin} from 'vite'
 import {createRemultServer} from "remult/server";
+import type {GenericResponse} from "remult/server";
 import options, {openApiDocOpts} from "./remultOptions";
 import http from "http";
 import {readFileSync} from "fs";
@@ -39,13 +40,18 @@ const middleware = async (
         return res.end(readFileSync('server/swagger.html').toString())
     }
 
-    Object.assign(res, {
+    const gRes: GenericResponse = {
         json: (data) => {
             res.writeHead(200, {'Content-Type': 'application/json'});
             res.end(JSON.stringify(data))
         },
-    });
-    const ret = await api.handle(req, res)
+        status: (statusCode) => {
+            res.statusCode = statusCode
+        },
+        end: res.end
+    }
+
+    const ret = await api.handle(req, gRes)
     if (!ret) next()
 }
 
