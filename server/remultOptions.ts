@@ -10,3 +10,8 @@ export default <RemultServerOptions<any>>{
         ProductsController
     ]
 }
+
+export const openApiDocOpts = {
+    title: "remult-vite-demo",
+    version: '0.0.1',
+}
