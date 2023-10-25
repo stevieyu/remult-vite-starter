@@ -1,12 +1,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://unpkg.b-cdn.net/swagger-ui-dist@4.5.0/swagger-ui.css" />
+
+<link rel="stylesheet" href="https://unpkg.b-cdn.net/swagger-ui-dist@5/swagger-ui.css" />
+<script src="https://unpkg.b-cdn.net/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin></script>
+
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/themes/light.min.css"/>
+<script type="module" src="https://s.stevie.top/esm.sh/@shoelace-style/shoelace@2/cdn/shoelace-autoloader.js?bundle"></script>
+<!--<script type="module" data-shoelace="https://fastly.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/" src="https://fastly.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/shoelace-autoloader.min.js"></script>-->
+<sl-dropdown style="opacity:0;position: absolute;top: 0;right: 0">
+    <sl-button slot="trigger" caret>Download Api Client</sl-button>
+    <sl-menu>
+    </sl-menu>
+</sl-dropdown>
 <div id="swagger-ui"></div>
-<script src="https://unpkg.b-cdn.net/swagger-ui-dist@4.5.0/swagger-ui-bundle.js" crossorigin></script>
-<script>
-  window.onload = () => {
-    window.ui = SwaggerUIBundle({
-      url: '/api/openApi.json',
-      dom_id: '#swagger-ui',
-    });
-  };
+<script type="module">
+  window.ui = SwaggerUIBundle({
+    url: '/api/openApi.json',
+    dom_id: '#swagger-ui',
+    displayRequestDuration: true,
+  });
+  const downloadApiClient = (lang) => {
+    // if (/^localhost|^192/.test(location.hostname)) return
+    fetch('https://generator.swagger.io/api/gen/clients/'+lang, {
+      method: 'post',
+      body: JSON.stringify({
+        swaggerUrl: location.origin + '/api/openApi.json'
+        // swaggerUrl: 'https://generator.swagger.io/api/swagger.json'
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(r => r.json())
+      .then(r => window.open(r.link))
+  }
+  const codeLangs = `ada, akka-scala, android, apex, bash, clojure, cpprest, csharp, csharp-dotnet2, cwiki, dart, dart-jaguar, dynamic-html, eiffel, elixir, elm, erlang-client, flash, go, groovy, haskell-http-client, html, html2, java, javascript, javascript-closure-angular, jaxrs-cxf-client, jmeter, kotlin, lua, objc, perl, php, powershell, python, qt5cpp, r, ruby, rust, scala, scalaz, swagger, swagger-yaml, swift, swift3, swift4, swift5, tizen, typescript-angular, typescript-angularjs, typescript-aurelia, typescript-fetch, typescript-inversify, typescript-jquery, typescript-node, ue4cpp`.split(', ')
+  document.querySelector('sl-menu').innerHTML = codeLangs.map(i => `<sl-menu-item value="${i}">${i}</sl-menu-item>`).join('')
+  const dropdown = document.querySelector('sl-dropdown')
+  dropdown.addEventListener('sl-select', event => {
+    const selectedItem = event.detail.item;
+    downloadApiClient(selectedItem.value);
+  });
+  dropdown.style.opacity = 1
 </script>
