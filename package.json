@@ -10,8 +10,9 @@
     "tsx:watch": "pnpx tsx watch server/uwebsocket.ts"
   },
   "dependencies": {
-    "uWebSockets.js": "https://ghproxy.com/https://github.com/uNetworking/uWebSockets.js/archive/refs/heads/binaries.tar.gz",
-    "nhttp-land": "latest"
+    "mime-types": "latest",
+    "nhttp-land": "latest",
+    "uWebSockets.js": "https://ghproxy.com/https://github.com/uNetworking/uWebSockets.js/archive/refs/heads/binaries.tar.gz"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",
