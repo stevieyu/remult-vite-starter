@@ -40,6 +40,6 @@ app.any('/api/*',async ({response, newRequest, respondWith}) => {
 
 app.use(serveStatic("dist", {spa: true}));
 
-const port = 3000
+const port = 4173
 app.listen({port});
 console.log(`http://localhost:${port}`)

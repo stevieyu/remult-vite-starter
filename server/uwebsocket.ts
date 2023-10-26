@@ -14,8 +14,8 @@ const api = createRemultServer(options, {
 
 const app = App()
 
-interface GenericRequest extends GenericRequestInfo{
-    json?: () => Promise<string|object>;
+interface GenericRequest extends GenericRequestInfo {
+    json?: () => Promise<string | object>;
 }
 
 app.any('/api/*', async (res, req) => {
@@ -24,7 +24,25 @@ app.any('/api/*', async (res, req) => {
         url: req.getUrl(),
         method: req.getMethod(),
         query: Object.fromEntries(new URLSearchParams(req.getQuery())),
-        json: () => readJson(res)
+        json: () => new Promise((resolve, reject) => {
+            let buffer: Buffer;
+            res.onData((ab, isLast) => {
+                buffer = Buffer.concat(
+                    [buffer, Buffer.from(ab)].filter(i => i)
+                );
+
+                if (isLast) {
+                    try {
+                        resolve(JSON.parse(buffer.toString()));
+                    } catch (e) {
+                        res.close();
+                        resolve(buffer.toString())
+                    }
+                }
+            });
+
+            res.onAborted(reject);
+        })
     }
 
     const gRes: GenericResponse = {
@@ -78,30 +96,10 @@ app.get('/**', (res, req) => {
         .end(readFileSync(path));
 })
 
-const port = 3000
+const port = 4173
 app.listen(port, (listenSocket) => {
     if (listenSocket) {
         console.log(`http://localhost:${port}`)
     }
 })
 
-
-const readJson = (res: HttpResponse): Promise<string | object> => new Promise((resolve, reject) => {
-    let buffer: Buffer;
-    res.onData((ab, isLast) => {
-        buffer = Buffer.concat(
-            [buffer, Buffer.from(ab)].filter(i => i)
-        );
-
-        if (isLast) {
-            try {
-                resolve(JSON.parse(buffer.toString()));
-            } catch (e) {
-                res.close();
-                resolve(buffer.toString())
-            }
-        }
-    });
-
-    res.onAborted(reject);
-});
