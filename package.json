@@ -6,10 +6,11 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "tsc": "tsc",
-    "tsx:dev": "pnpx tsx server/fastify.ts",
-    "tsx:watch": "pnpx tsx watch server/nhttpLand.ts"
+    "tsx:dev": "pnpx tsx server/nhttpLand.ts",
+    "tsx:watch": "pnpx tsx watch server/uwebsocket.ts"
   },
   "dependencies": {
+    "uWebSockets.js": "https://ghproxy.com/https://github.com/uNetworking/uWebSockets.js/archive/refs/heads/binaries.tar.gz",
     "nhttp-land": "latest"
   },
   "devDependencies": {
@@ -18,7 +19,7 @@
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vue": "^3.3.7",
-    "vue-tsc": "^1.8.20"
+    "vue-tsc": "^1.8.21"
   },
   "optionalDependencies": {
     "@types/node": "latest"

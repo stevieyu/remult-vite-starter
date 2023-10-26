@@ -47,6 +47,7 @@ const middleware = async (
         },
         status: (statusCode) => {
             res.statusCode = statusCode
+            return gRes
         },
         end: res.end
     }
