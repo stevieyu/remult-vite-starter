@@ -61,15 +61,17 @@ app.any('/api/*', async (res, req) => {
 })
 
 app.get('/**', (res, req) => {
-    let path = req.getUrl();
-    if (/\/$/.test(path)) path += 'index.html'
+    const root = 'dist'
+    const index = 'index.html'
+    let path = root + req.getUrl();
+    if (/\/$/.test(path)) path += index
 
-    path = 'dist' + path
     if (!existsSync(path)) {
-        res.writeStatus('404')
-            .writeHeader('Content-Type', 'text/html; charset=UTF-8')
-            .end('Not found');
-        return
+        path = root + '/' + index;
+        // res.writeStatus('404')
+        //     .writeHeader('Content-Type', 'text/html; charset=UTF-8')
+        //     .end('Not found');
+        // return
     }
 
     res.writeHeader('Content-Type', mime.lookup(path))
