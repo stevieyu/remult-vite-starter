@@ -30,7 +30,6 @@ app.any('/api/*', async (res, req) => {
                 buffer = Buffer.concat(
                     [buffer, Buffer.from(ab)].filter(i => i)
                 );
-
                 if (isLast) {
                     try {
                         resolve(JSON.parse(buffer.toString()));
@@ -40,7 +39,6 @@ app.any('/api/*', async (res, req) => {
                     }
                 }
             });
-
             res.onAborted(reject);
         })
     }
