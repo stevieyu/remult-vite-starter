@@ -28,6 +28,7 @@ app.any('/api/*',async ({response, newRequest, respondWith}) => {
             response.status(statusCode)
             return gRes
         },
+        send(){},
         end(){}
     }
     const res = await api.handle(newRequest, gRes)

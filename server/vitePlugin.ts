@@ -30,12 +30,12 @@ const middleware = async (
         })
     }
 
-    if (/openApi.json$/.test(req.url)) {
+    if (/openapi.json$/i.test(req.url)) {
         res.writeHead(200, {'Content-Type': 'application/json'});
         return res.end(JSON.stringify(api.openApiDoc(openApiDocOpts)))
     }
 
-    if (/docs$/.test(req.url)) {
+    if (/docs$/i.test(req.url)) {
         res.writeHead(200, {'Content-Type': 'text/html; charset=UTF-8'});
         return res.end(readFileSync('server/swagger.html').toString())
     }
@@ -49,6 +49,7 @@ const middleware = async (
             res.statusCode = statusCode
             return gRes
         },
+        send: () => {},
         end: res.end
     }
 
