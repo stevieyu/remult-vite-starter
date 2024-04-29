@@ -1,4 +1,5 @@
 import {build as esbuild} from 'esbuild'
+
 import {existsSync, writeFileSync} from 'fs'
 import {join} from 'path'
 
@@ -40,6 +41,8 @@ esbuild({
     target: 'node21',
     format: 'esm',
     external: [],
-    plugins: [depsToEsmshBundle],
+    plugins: [
+        depsToEsmshBundle,
+    ],
 })
 
