@@ -6,6 +6,7 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "tsc": "tsc",
+    "build:server": "esbuild server/nhttpLand.ts --outfile=dist/server.js --platform=node --target=node21 --format=esm --bundle --minify --external:@paralleldrive/cuid2",
     "tsx:dev": "pnpx tsx server/nhttpLand.ts",
     "tsx:watch": "pnpx tsx watch server/uwebsocket.ts"
   },
